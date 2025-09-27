@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PPT Remote</title>
+<script src="{{url_for('static',filename='js/socket.js')}}"></script>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        display: grid;
+        height: 100vh;
+        width: 100vw;
+        font-family: Arial, sans-serif;
+        background: #ffffff;
+        color: #333;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(3, 1fr);
+        gap: 12px;
+        padding: 12px;
+        padding-bottom: 70px; /* leave space for fixed exit button */
+    }
+    button {
+        width: 100%;
+        height: 100%;
+        font-size: 1.4rem;
+        font-weight: 500;
+        border: none;
+        border-radius: 10px;
+        color: white;
+        cursor: pointer;
+        transition: background 0.25s ease-in-out;
+    }
+    .start { background: #007bff; }
+    .start:hover { background: #0056b3; }
+
+    .prev { background: #28a745; }
+    .prev:hover { background: #1e7e34; }
+
+    .next { background: #fd7e14; }
+    .next:hover { background: #e8590c; }
+
+    .blank { background: #6c757d; }
+    .blank:hover { background: #5a6268; }
+
+    .black { background: #343a40; }
+    .black:hover { background: #212529; }
+
+    .exit:hover { background: #a71d2a; }
+
+    .full-row {
+        grid-column: 1 / span 2;
+    }
+
+    /* Help button (floating top-right) */
+    .help-btn {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: #17a2b8;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    .help-btn:hover {
+        background: #117a8b;
+    }
+
+    /* Modal styles */
+    .modal {
+        display: none; 
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5);
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 400px;
+        width: 90%;
+        color: #333;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+    .modal-content h2 {
+        margin-bottom: 10px;
+        font-size: 1.3rem;
+    }
+    .close-btn, .stop, .exit {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        margin-top: 15px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    .close-btn:hover {
+        background: #a71d2a;
+    }
+</style>
+</head>
+<body>
+
+<button class="full-row start" onclick="send('start')">Start Presentation</button>
+<button class="prev" onclick="send('prev')">Previous</button>
+<button class="next" onclick="send('next')">Next</button>
+<button class="blank" onclick="send('blank')">Blank Screen</button>
+<button class="black" onclick="send('black')">Black Screen</button>
+<button class="full-row exit" onclick="send('exit')">Exit Presentation</button>
+<button class="full-row stop" onclick="send('stop_server')">🛑 Stop Server</button>
+
+<button class="help-btn" onclick="openHelp()">?</button>
+
+<!-- Help Modal -->
+<div id="helpModal" class="modal">
+  <div class="modal-content">
+    <h2>Controls Guide</h2>
+    <ul>
+      <li><b>Start Presentation:</b> Begin slideshow mode</li>
+      <li><b>Previous:</b> Go to previous slide</li>
+      <li><b>Next:</b> Go to next slide</li>
+      <li><b>Blank Screen:</b> Show a blank screen (B key)</li>
+      <li><b>Black Screen:</b> Show a black screen (W key)</li>
+      <li><b>Exit Presentation:</b> End slideshow mode</li>
+      <li><b>Swipe left/right:</b> Navigate slides on mobile</li>
+    </ul>
+    <button class="close-btn" onclick="closeHelp()">Close</button>
+  </div>
+</div>
+
+<script>
+    const socket = io();
+
+    function send(action){
+        socket.emit(action);
+    }
+
+    // Swipe detection (mobile)
+    let startX = 0;
+    document.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; });
+    document.addEventListener('touchend', (e) => {
+        let diffX = e.changedTouches[0].clientX - startX;
+        if(diffX > 50) send('prev'); 
+        else if(diffX < -50) send('next');
+    });
+
+    // Help modal controls
+    function openHelp() {
+        document.getElementById('helpModal').style.display = 'flex';
+    }
+    function closeHelp() {
+        document.getElementById('helpModal').style.display = 'none';
+    }
+
+    socket.on('server_stopping', (data) => {
+        alert(data.msg);
+    });
+
+</script>
+</body>
+</html>
