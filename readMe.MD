@@ -1,7 +1,7 @@
 # PowerPoint Remote Control 🖥️
 
 Control your PowerPoint presentations wirelessly from any device on your local network.
-[![Watch the demo](https://img.youtube.com/vi/ZkbFl5UCtuA/0.jpg)](https://www.youtube.com/watch?v=ZkbFl5UCtuA)
+[![Watch the demo]](https://www.youtube.com/watch?v=ZkbFl5UCtuA)
 
 ## ✨ Features
 
@@ -135,6 +135,7 @@ We welcome contributions to make this project even better! Please follow these g
     *   Submit a Pull Request from your branch to the `main` branch of this repository.
     *   Provide a detailed description of your changes and why they are necessary.
     *   Reference any related issues.
+
 
 
 
