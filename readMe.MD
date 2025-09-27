@@ -1,7 +1,7 @@
 # PowerPoint Remote Control 🖥️
 
 Control your PowerPoint presentations wirelessly from any device on your local network.
-
+![Project Preview](/demo/demo.mkv)
 ## ✨ Features
 
 *   📱 **Wireless Control**: Advance or go back in your presentation from any device (phone, tablet, laptop) connected to the same local network.
@@ -133,3 +133,4 @@ We welcome contributions to make this project even better! Please follow these g
     *   Submit a Pull Request from your branch to the `main` branch of this repository.
     *   Provide a detailed description of your changes and why they are necessary.
     *   Reference any related issues.
+
