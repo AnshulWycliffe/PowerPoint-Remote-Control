@@ -97,7 +97,8 @@ Once the application is running, you can access the remote control interface fro
     *   Click `Next Slide` to advance to the next slide.
     *   Click `Previous Slide` to go back to the previous slide.
 
-    ![Usage Screenshot Placeholder](https://via.placeholder.com/800x450?text=Remote+Control+Interface+Screenshot)
+    ![Usage Screenshot Placeholder](/demo/image_1.png)
+    ![Usage Screenshot Placeholder](/demo/image_2.png)
     *Placeholder: Imagine a simple web interface with "Previous Slide" and "Next Slide" buttons.*
 
 
@@ -133,4 +134,5 @@ We welcome contributions to make this project even better! Please follow these g
     *   Submit a Pull Request from your branch to the `main` branch of this repository.
     *   Provide a detailed description of your changes and why they are necessary.
     *   Reference any related issues.
+
 
