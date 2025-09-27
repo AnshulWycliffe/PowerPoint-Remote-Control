@@ -9,7 +9,7 @@ Control your PowerPoint presentations wirelessly from any device on your local n
 ## ✨ Features
 
 *   📱 **Wireless Control**: Advance or go back in your presentation from any device (phone, tablet, laptop) connected to the same local network.
-*   🌐 **Web-Based Interface**: Simple and intuitive web interface, no special apps required on the remote device.
+*   🌐 **Web-Based Interface & QR Functionality**: Simple and intuitive web interface, no special apps required on the remote device through QR or mannual.
 *   🚀 **Easy Setup**: Get up and running quickly with minimal configuration.
 *   💻 **Cross-Platform**: Works with any operating system that can run Python and access a web browser.
 *   ⚡ **Lightweight**: Built with Flask, ensuring a small footprint and fast response times.
@@ -96,7 +96,12 @@ Once the application is running, you can access the remote control interface fro
 
     You might also be able to use `http://localhost:5000` on the host machine itself.
 
-3.  **Control Your Presentation**:
+3.  **QR Code Access**:
+    When the server starts, a medium-sized QR code will be displayed in the terminal.
+
+    Scan this QR code with your phone or tablet camera to open the remote interface directly—no typing needed.
+
+4.  **Control Your Presentation**:
     The web interface will display simple buttons for navigation.
     *   Click `Next Slide` to advance to the next slide.
     *   Click `Previous Slide` to go back to the previous slide.
@@ -138,6 +143,7 @@ We welcome contributions to make this project even better! Please follow these g
     *   Submit a Pull Request from your branch to the `main` branch of this repository.
     *   Provide a detailed description of your changes and why they are necessary.
     *   Reference any related issues.
+
 
 
 
