@@ -1,25 +1,38 @@
+import sys
+import os
 import threading
 import socket
-import qrcode_terminal
-from flask import Flask, render_template,request
-from flask_socketio import SocketIO
-import pyautogui
 import time
+import signal
+import logging
+import pyautogui
+import qrcode_terminal
+from datetime import datetime
+from flask import Flask, render_template, request
+from flask_socketio import SocketIO
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from InquirerPy import inquirer
-from datetime import datetime
-import logging
-import os
-import signal
-import threading     
 
-# ---------------- Flask App ---------------- #
-app = Flask(__name__)
+# ---------------- Helper for CxFreeze paths ---------------- #
+if getattr(sys, "frozen", False):
+    # Running from cx_Freeze exe
+    base_path = os.path.dirname(sys.executable)
+else:
+    # Running normally (dev mode)
+    base_path = os.path.abspath(".")
+
+app = Flask(
+    __name__,
+    template_folder=os.path.join(base_path, "templates"),
+    static_folder=os.path.join(base_path, "static")
+)
 socketio = SocketIO(app, cors_allowed_origins="*")
+
 logs = []
 
+# ---------------- Flask Routes ---------------- #
 @app.route("/")
 def index():
     return render_template("remote.html")
@@ -30,10 +43,10 @@ console = Console()
 def log_action(action, level="INFO"):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     logs.append(f"[{level}] [{timestamp}] {action}")
-    color = "cyan" if level=="INFO" else "red" if level=="ERROR" else "yellow"
+    color = "cyan" if level == "INFO" else "red" if level == "ERROR" else "yellow"
     console.print(f"[bold {color}][{level}][/bold {color}] [{timestamp}] {action}")
 
-# ---------------- Socket Events ---------------- #
+# ---------------- SocketIO Events ---------------- #
 @socketio.on("next")
 def next_slide():
     pyautogui.press("right")
@@ -62,12 +75,13 @@ def blank_screen():
 @socketio.on("black")
 def black_screen():
     pyautogui.press("b")
-    log_action("White screen activated")
-@socketio.on('stop_server')
+    log_action("Black screen activated")
+
+@socketio.on("stop_server")
 def stop_server():
-    socketio.emit('server_stopping', {'msg': 'Server is shutting down!'})
+    socketio.emit("server_stopping", {"msg": "Server is shutting down!"})
     console.print("⚠️ Stop server event received. Shutting down...")
-    os.kill(os.getpid(), signal.SIGINT)  # safely terminate the process
+    os.kill(os.getpid(), signal.SIGINT)
 
 # ---------------- Helper Functions ---------------- #
 def get_local_ip():
@@ -84,9 +98,8 @@ def get_local_ip():
 def run_server():
     try:
         log_action("Starting Flask server...")
-        logging.getLogger('werkzeug').disabled = True
-
-        socketio.run(app, host="0.0.0.0", port=5000, debug=False)
+        logging.getLogger("werkzeug").disabled = True
+        socketio.run(app, host="0.0.0.0", port=5000, debug=False, use_reloader=False)
     except Exception as e:
         log_action(f"Server error: {e}", level="ERROR")
 
@@ -112,7 +125,6 @@ def show_logs():
         table.add_row(level, timestamp, action)
     console.print(table)
 
-
 def show_about_dev():
     console.print(
         Panel.fit(
@@ -130,7 +142,6 @@ presentations using any device connected to the same network.
             border_style="cyan"
         )
     )
-
 
 def show_usage():
     console.print(
@@ -196,10 +207,10 @@ def main_menu():
 
         elif choice_lower == "about dev":
             show_about_dev()
-            
+
         elif choice_lower == "usage":
             show_usage()
-            
+
         elif choice_lower == "exit":
             console.print("[bold red]Exiting...[/bold red]")
             break
